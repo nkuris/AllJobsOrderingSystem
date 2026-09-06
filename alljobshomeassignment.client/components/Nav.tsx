@@ -19,9 +19,9 @@ export default function Nav() {
         <div style={{fontWeight:800,color:'#0b1220',marginRight:8}}>AllJobs</div>
         {auth.token && (
           <>
-            <Link href="/products"><a style={{color:'#0b1220'}}>Products</a></Link>
-            <Link href="/orders"><a style={{color:'#0b1220'}}>Orders</a></Link>
-            {auth.role === 'ADMIN' && <Link href="/orders/create"><a style={{color:'#0b1220'}}>Create Order</a></Link>}
+            <Link href="/products" style={{color:'#0b1220'}}>Products</Link>
+            <Link href="/orders" style={{color:'#0b1220'}}>Orders</Link>
+            {auth.role === 'ADMIN' && <Link href="/orders/create" style={{color:'#0b1220'}}>Create Order</Link>}
           </>
         )}
 
@@ -33,8 +33,8 @@ export default function Nav() {
             </>
           ) : (
             <>
-              <Link href="/login"><a style={{color:'#0b1220'}}>Login</a></Link>
-              <Link href="/register"><a style={{color:'#0b1220'}}>Register</a></Link>
+              <Link href="/login" style={{color:'#0b1220'}}>Login</Link>
+              <Link href="/register" style={{color:'#0b1220'}}>Register</Link>
             </>
           )}
         </div>

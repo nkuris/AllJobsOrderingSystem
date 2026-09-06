@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
+import { useRouter } from 'next/router'
 import useRequireAuth from '../hooks/useRequireAuth'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { fetchOrders } from '../store/ordersSlice'
@@ -7,6 +7,7 @@ import api from '../lib/api'
 
 export default function OrdersPage() {
   useRequireAuth()
+  const router = useRouter()
   const dispatch = useAppDispatch()
   const ordersState = useAppSelector(s => s.orders)
   const auth = useAppSelector(s => s.auth)
@@ -58,7 +59,7 @@ export default function OrdersPage() {
               <td>{o.totalAmount.toFixed(2)}</td>
               <td>{o.status}</td>
               <td style={{textAlign:'right'}}>
-                <Link href={`/orders/${o.id}`}><button style={{marginRight:8}}>View</button></Link>
+                <button onClick={() => router.push(`/orders/${o.id}`)} style={{marginRight:8}}>View</button>
                 {auth.role !== 'VIEWER' && (
                   <select onChange={e => changeStatus(o.id, e.target.value)} defaultValue="">
                     <option value="">Change status</option>

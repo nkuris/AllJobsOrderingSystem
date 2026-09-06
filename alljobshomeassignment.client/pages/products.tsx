@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import useRequireAuth from '../hooks/useRequireAuth'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { fetchProducts, toggleProductStatus } from '../store/productsSlice'
@@ -8,6 +9,7 @@ import Confirm from '../components/Confirm'
 
 export default function ProductsPage() {
   useRequireAuth()
+  const router = useRouter()
   const dispatch = useAppDispatch()
   const productsState = useAppSelector(s => s.products)
   const auth = useAppSelector(s => s.auth)
@@ -39,7 +41,7 @@ export default function ProductsPage() {
           <option value="ACTIVE">Active</option>
           <option value="INACTIVE">Inactive</option>
         </select>
-        {auth.role !== 'VIEWER' && <Link href="/products/create"><button style={{marginLeft:'auto'}}>Create product</button></Link>}
+        {auth.role !== 'VIEWER' && <button onClick={() => router.push('/products/create')} style={{marginLeft:'auto'}}>Create product</button>}
       </div>
 
       {productsState.loading && <div>Loading...</div>}
@@ -65,10 +67,10 @@ export default function ProductsPage() {
               <td>{p.stockQuantity}</td>
               <td>{p.status}</td>
               <td style={{textAlign:'right'}}>
-                <Link href={`/products/${p.id}`}><button style={{marginRight:8}}>View</button></Link>
+                <button onClick={() => router.push(`/products/${p.id}`)} style={{marginRight:8}}>View</button>
                 {auth.role !== 'VIEWER' && (
                   <>
-                    <Link href={`/products/${p.id}/edit`}><button style={{marginRight:8}}>Edit</button></Link>
+                    <button onClick={() => router.push(`/products/${p.id}/edit`)} style={{marginRight:8}}>Edit</button>
                     <button onClick={() => { setTargetProduct(p.id); setConfirmOpen(true) }}>{p.status === 'ACTIVE' ? 'Deactivate' : 'Activate'}</button>
                   </>
                 )}
