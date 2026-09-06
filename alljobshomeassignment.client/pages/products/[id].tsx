@@ -12,7 +12,7 @@ export default function ProductViewPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!id) return
+    if (!router.isReady || !id) return
     const load = async () => {
       try {
         const res = await api.get(`/api/products/${id}`)
@@ -22,7 +22,7 @@ export default function ProductViewPage() {
       }
     }
     load()
-  }, [id])
+  }, [id, router.isReady])
 
   if (!product && !error) return <div>Loading...</div>
 

@@ -4,7 +4,6 @@ import useRequireAuth from '../../hooks/useRequireAuth'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { fetchProducts, createProduct } from '../../store/productsSlice'
 import FormField from '../../components/FormField'
-import { requireAdmin } from '../../lib/ssrAuth'
 
 export default function CreateProductPage() {
   useRequireAuth()
@@ -24,13 +23,13 @@ export default function CreateProductPage() {
   if (auth.role !== 'ADMIN') {
     return <section style={{width:'100%',maxWidth:1100}}><h1>Create Product</h1><div>You are not authorized.</div></section>
   }
-  const submit = async (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setError(null)
     if (!name || !sku || price === '' || stockQuantity === '') { setError('Please fill required fields'); return }
     try {
       await dispatch(createProduct({ name, sku, price: Number(price), stockQuantity: Number(stockQuantity), description })).unwrap()
-      router.push('/products')
+      await router.push('/products')
     } catch (err: any) {
       setError(err ?? 'Failed')
     }
@@ -45,8 +44,8 @@ export default function CreateProductPage() {
         <FormField label="Price" value={price === '' ? '' : String(price)} onChange={e => setPrice(e.target.value === '' ? '' : Number(e.target.value))} type="number" step="0.01" required />
         <FormField label="Stock quantity" value={stockQuantity === '' ? '' : String(stockQuantity)} onChange={e => setStockQuantity(e.target.value === '' ? '' : Number(e.target.value))} type="number" required />
         <div>
-          <label>Description</label>
-          <textarea value={description} onChange={e => setDescription(e.target.value)} style={{width:'100%',minHeight:100,padding:10,borderRadius:10,border:'1px solid #e2e8f0'}} />
+          <label htmlFor="description">Description</label>
+          <textarea id="description" name="description" value={description} onChange={e => setDescription(e.target.value)} style={{width:'100%',minHeight:100,padding:10,borderRadius:10,border:'1px solid #e2e8f0'}} />
         </div>
         {error && <div className="error">{error}</div>}
         <div style={{marginTop:12}}>
@@ -55,8 +54,4 @@ export default function CreateProductPage() {
       </form>
     </section>
   )
-}
-
-export async function getServerSideProps(ctx: any) {
-  return requireAdmin(ctx)
 }

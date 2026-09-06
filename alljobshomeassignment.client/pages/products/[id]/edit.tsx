@@ -5,7 +5,6 @@ import { useAppDispatch, useAppSelector } from '../../../store/hooks'
 import { fetchProducts, updateProduct } from '../../../store/productsSlice'
 import FormField from '../../../components/FormField'
 import api from '../../../lib/api'
-import { requireAdmin } from '../../../lib/ssrAuth'
 
 export default function EditProductPage() {
   useRequireAuth()
@@ -25,7 +24,7 @@ export default function EditProductPage() {
   useEffect(() => { dispatch(fetchProducts()) }, [dispatch])
 
   useEffect(() => {
-    if (!id) return
+    if (!router.isReady || !id) return
     const load = async () => {
       try {
         const res = await api.get(`/api/products/${id}`)
@@ -40,19 +39,19 @@ export default function EditProductPage() {
       }
     }
     load()
-  }, [id])
+  }, [id, router.isReady])
 
   if (auth.role !== 'ADMIN') {
     return <section style={{width:'100%',maxWidth:1100}}><h1>Edit Product</h1><div>You are not authorized.</div></section>
   }
 
-  const submit = async (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setError(null)
     if (!product) return
     try {
       await dispatch(updateProduct({ id: Number(id), body: { name, sku, price: Number(price), stockQuantity: Number(stockQuantity), description } })).unwrap()
-      router.push('/products')
+      await router.push('/products')
     } catch (err: any) {
       setError(err ?? 'Failed')
     }
@@ -70,8 +69,8 @@ export default function EditProductPage() {
           <FormField label="Price" value={price === '' ? '' : String(price)} onChange={e => setPrice(e.target.value === '' ? '' : Number(e.target.value))} type="number" step="0.01" required />
           <FormField label="Stock quantity" value={stockQuantity === '' ? '' : String(stockQuantity)} onChange={e => setStockQuantity(e.target.value === '' ? '' : Number(e.target.value))} type="number" required />
           <div>
-            <label>Description</label>
-            <textarea value={description} onChange={e => setDescription(e.target.value)} style={{width:'100%',minHeight:100,padding:10,borderRadius:10,border:'1px solid #e2e8f0'}} />
+            <label htmlFor="description">Description</label>
+            <textarea id="description" name="description" value={description} onChange={e => setDescription(e.target.value)} style={{width:'100%',minHeight:100,padding:10,borderRadius:10,border:'1px solid #e2e8f0'}} />
           </div>
           <div style={{marginTop:12}}>
             <button type="submit">Save</button>
@@ -80,8 +79,4 @@ export default function EditProductPage() {
       )}
     </section>
   )
-}
-
-export async function getServerSideProps(ctx: any) {
-  return requireAdmin(ctx)
 }

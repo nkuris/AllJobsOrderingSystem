@@ -27,7 +27,7 @@ export const updateProduct = createAsyncThunk('products/update', async ({ id, bo
 
 export const toggleProductStatus = createAsyncThunk('products/toggleStatus', async (id: number, { rejectWithValue }) => {
   try {
-    const res = await api.patch<Product>(`/api/products/${id}/toggle-status`)
+    const res = await api.patch<Product>(`/api/products/${id}/status`)
     return res.data
   } catch (err: any) {
     return rejectWithValue(err.response?.data?.message ?? err.message)

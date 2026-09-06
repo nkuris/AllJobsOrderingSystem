@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
+import Link from 'next/link'
 import useRequireAuth from '../hooks/useRequireAuth'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { fetchProducts, toggleProductStatus } from '../store/productsSlice'
 import FormField from '../components/FormField'
 import Confirm from '../components/Confirm'
-import { useRouter } from 'next/router'
 
 export default function ProductsPage() {
   useRequireAuth()
@@ -16,7 +16,6 @@ export default function ProductsPage() {
   const [statusFilter, setStatusFilter] = useState<'ALL'|'ACTIVE'|'INACTIVE'>('ALL')
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [targetProduct, setTargetProduct] = useState<number | null>(null)
-  const router = useRouter()
 
   useEffect(() => { dispatch(fetchProducts()) }, [dispatch])
 
@@ -40,7 +39,7 @@ export default function ProductsPage() {
           <option value="ACTIVE">Active</option>
           <option value="INACTIVE">Inactive</option>
         </select>
-        {auth.role !== 'VIEWER' && <button style={{marginLeft:'auto'}} onClick={() => router.push('/products/create')}>Create product</button>}
+        {auth.role !== 'VIEWER' && <Link href="/products/create"><button style={{marginLeft:'auto'}}>Create product</button></Link>}
       </div>
 
       {productsState.loading && <div>Loading...</div>}
@@ -66,10 +65,10 @@ export default function ProductsPage() {
               <td>{p.stockQuantity}</td>
               <td>{p.status}</td>
               <td style={{textAlign:'right'}}>
-                <button style={{marginRight:8}} onClick={() => router.push(`/products/${p.id}`)}>View</button>
+                <Link href={`/products/${p.id}`}><button style={{marginRight:8}}>View</button></Link>
                 {auth.role !== 'VIEWER' && (
                   <>
-                    <button style={{marginRight:8}} onClick={() => router.push(`/products/${p.id}/edit`)}>Edit</button>
+                    <Link href={`/products/${p.id}/edit`}><button style={{marginRight:8}}>Edit</button></Link>
                     <button onClick={() => { setTargetProduct(p.id); setConfirmOpen(true) }}>{p.status === 'ACTIVE' ? 'Deactivate' : 'Activate'}</button>
                   </>
                 )}

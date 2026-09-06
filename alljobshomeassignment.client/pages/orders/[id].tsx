@@ -12,7 +12,7 @@ export default function OrderViewPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!id) return
+    if (!router.isReady || !id) return
     const load = async () => {
       try {
         const res = await api.get(`/api/orders/${id}`)
@@ -22,7 +22,7 @@ export default function OrderViewPage() {
       }
     }
     load()
-  }, [id])
+  }, [id, router.isReady])
 
   if (!order && !error) return <div>Loading...</div>
 
