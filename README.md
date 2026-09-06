@@ -4,9 +4,11 @@ A responsive Full Stack application for managing products and orders with role-b
 
 **Tech Stack:**
 - **Backend**: .NET 10 (C#) with ASP.NET Core
-- **Frontend**: React 18 + Next.js 16
+- **Frontend**: React 18 + Next.js 16 (with TypeScript)
 - **Database**: MySQL 8.0
-- **Authentication**: JWT (JSON Web Tokens)
+- **Authentication**: JWT (JSON Web Tokens) with Refresh Token Support
+- **State Management**: Redux Toolkit
+- **API Client**: Axios with Request Interceptors
 - **Containerization**: Docker & Docker Compose
 
 ---
