@@ -1,7 +1,7 @@
 FROM node:20 AS build
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 COPY . ./
 # Build Next.js app (server-rendered) — do not export static site
 RUN npm run build
