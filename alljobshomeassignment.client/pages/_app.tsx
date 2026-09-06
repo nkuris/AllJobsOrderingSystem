@@ -6,11 +6,11 @@ import Layout from '../components/Layout'
 import { useEffect } from 'react'
 import api from '../lib/api'
 import { setAuth } from '../store/authSlice'
-import { useStore } from 'react-redux'
+import { useAppDispatch } from '../store/hooks'
 
-export default function App({ Component, pageProps }: AppProps) {
+function AppContent({ Component, pageProps }: AppProps) {
   // hydrate auth on client start
-  const storeHook = store
+  const dispatch = useAppDispatch()
   useEffect(() => {
     let mounted = true
     async function hydrate() {
@@ -20,7 +20,7 @@ export default function App({ Component, pageProps }: AppProps) {
         // the /me endpoint only returns basic info; token came from cookie/localStorage
         const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null
         if (!token) return
-        storeHook.dispatch(setAuth({ token, userId: res.data.userId, email: res.data.email, role: res.data.role }))
+        dispatch(setAuth({ token, userId: res.data.userId, email: res.data.email, role: res.data.role }))
       } catch {
         // clear any stale client-side token or cookie
         if (typeof window !== 'undefined') {
@@ -31,13 +31,19 @@ export default function App({ Component, pageProps }: AppProps) {
     }
     hydrate()
     return () => { mounted = false }
-  }, [])
+  }, [dispatch])
 
   return (
+    <Layout>
+      <Component {...pageProps} />
+    </Layout>
+  )
+}
+
+export default function App(props: AppProps) {
+  return (
     <Provider store={store}>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <AppContent {...props} />
     </Provider>
   )
 }
