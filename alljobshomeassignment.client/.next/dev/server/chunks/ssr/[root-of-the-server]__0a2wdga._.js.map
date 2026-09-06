@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 40, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/nkuri/source/repos/AllJobsHomeAssignment/alljobshomeassignment.client/pages/index.tsx"],"sourcesContent":["import type { NextPage } from 'next'\r\nimport { useEffect } from 'react'\r\nimport { useRouter } from 'next/router'\r\n\r\nconst Home: NextPage = () => {\r\n  const router = useRouter()\r\n  useEffect(() => { router.replace('/login') }, [router])\r\n  return null\r\n}\r\n\r\nexport default Home\r\n"],"names":["Home","router","replace"],"mappings":";;;;AACA;AACA;;;AAEA,MAAMA,OAAiB;IACrB,MAAMC,SAAS,IAAA,oIAAS;IACxB,IAAA,gHAAS,EAAC;QAAQA,OAAOC,OAAO,CAAC;IAAU,GAAG;QAACD;KAAO;IACtD,OAAO;AACT;uCAEeD"}}]
+}

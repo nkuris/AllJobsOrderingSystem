@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  server:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ./AllJobsHomeAssignment.Server:/app
+  client:
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./alljobshomeassignment.client:/app

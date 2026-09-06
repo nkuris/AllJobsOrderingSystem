@@ -1,0 +1,33 @@
+# Build results
+bin/
+obj/
+*.log
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment
+.env
+.env.local
+
+# Test scripts
+run-integration-tests*.ps1
+
+# Plan and documentation files
+AUTHORIZATION_IMPLEMENTATION_SUMMARY.md
+AUTHORIZATION_VERIFICATION.md
+INTEGRATION_TESTS.md
+INTEGRATION_TEST_RESULTS.md
+TEST_COVERAGE_ANALYSIS.md
+TEST_COVERAGE_COMPLETE.md
+
+# Docker compose setup docs
+docker-compose/NETWORKING.md
+docker-compose/SETUP_COMPLETE.md

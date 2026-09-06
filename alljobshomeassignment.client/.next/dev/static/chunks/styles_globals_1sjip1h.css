@@ -1,0 +1,11 @@
+/* [project]/styles/globals.css [client] (css) */
+html, body, #__next {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/*# sourceMappingURL=styles_globals_1sjip1h.css.map*/

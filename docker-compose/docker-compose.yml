@@ -1,0 +1,66 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:8.0
+    container_name: alljobs-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: alljobs_db
+      MYSQL_USER: alljobs_user
+      MYSQL_PASSWORD: alljobs_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - alljobs_net
+
+  server:
+    build:
+      context: ..
+      dockerfile: AllJobsHomeAssignment.Server/Dockerfile
+      args:
+        - HTTP_PROXY=${HTTP_PROXY:-}
+        - HTTPS_PROXY=${HTTPS_PROXY:-}
+        - NO_PROXY=${NO_PROXY:-}
+    container_name: alljobs-server
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=db;Port=3306;Database=alljobs_db;User=alljobs_user;Password=alljobs_password;
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - alljobs_net
+
+  client:
+    build:
+      context: ../alljobshomeassignment.client
+      dockerfile: Dockerfile
+      args:
+        - HTTP_PROXY=${HTTP_PROXY:-}
+        - HTTPS_PROXY=${HTTPS_PROXY:-}
+        - NO_PROXY=${NO_PROXY:-}
+    container_name: alljobs-client
+    ports:
+      - "3000:80"
+    depends_on:
+      - server
+    networks:
+      - alljobs_net
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  alljobs_net:
+    driver: bridge

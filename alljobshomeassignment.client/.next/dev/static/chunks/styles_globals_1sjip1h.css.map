@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/nkuri/source/repos/AllJobsHomeAssignment/alljobshomeassignment.client/styles/globals.css"],"sourcesContent":["html,body,#__next{height:100%}\r\nbody{margin:0;font-family:Arial,Helvetica,sans-serif}\r\n"],"names":[],"mappings":"AAAA;;;;AACA"}}]
+}
