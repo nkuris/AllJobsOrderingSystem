@@ -106,6 +106,84 @@ The database is automatically seeded with:
 
 ---
 
+## 🏥 Health Checks
+
+### Overview
+
+Health checks are implemented for both the **MySQL Database** and the **.NET Backend API** to ensure system reliability and proper service orchestration in Docker Compose.
+
+### Why Health Checks?
+
+- **Service Dependency Management**: Ensures the database is fully ready before the backend attempts to connect
+- **Automatic Failure Recovery**: Services restart automatically if they become unhealthy
+- **Production Readiness**: Enables proper load balancer and orchestration platform integration (Docker Compose, Kubernetes, etc.)
+- **Reduced Startup Issues**: Prevents race conditions where services start before their dependencies are ready
+
+### How Health Checks Work
+
+#### Database Health Check (MySQL)
+
+```
+healthcheck:
+  test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pChangeMe!"]
+  interval: 5s          # Check every 5 seconds
+  timeout: 3s           # Fail if no response within 3 seconds
+  retries: 10           # Mark unhealthy after 10 consecutive failures
+  start_period: 10s     # Grace period before first check
+```
+
+- Uses `mysqladmin ping` command to verify database is responding
+- Starts checking after 10-second startup grace period
+- Marks database as healthy once connection succeeds
+
+#### Backend API Health Check
+
+```
+healthcheck:
+  test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
+  interval: 5s          # Check every 5 seconds
+  timeout: 3s           # Fail if no response within 3 seconds
+  retries: 10           # Mark unhealthy after 10 consecutive failures
+  start_period: 15s     # Grace period before first check
+```
+
+- Makes HTTP requests to `/api/health` endpoint
+- Requires successful response (2xx status code) with `-f` flag
+- Longer startup grace period (15s) allows database initialization
+
+### Service Startup Order
+
+When using Docker Compose, services start in this order due to health check dependencies:
+
+1. **Database** (`db`) - Starts first, waits to be healthy
+2. **Backend** (`backend`) - Starts after database is healthy, waits to be healthy
+3. **Frontend** (`frontend`) - Starts after backend is healthy
+
+This ensures all dependencies are ready before the next service initializes.
+
+### Monitoring Health Checks
+
+To check service health status during development:
+
+```
+# View container health status
+docker ps --format "table {{.Names}}\t{{.Status}}"
+
+# Check detailed health information
+docker inspect --format='{{.State.Health.Status}}' <container_name>
+
+# View health check logs
+docker logs <container_name>
+```
+
+### Common Issues
+
+- **Database fails to become healthy**: Check MySQL credentials in `docker-compose.yml`
+- **Backend remains unhealthy**: Verify database connection string and check logs with `docker logs backend`
+- **Frontend won't start**: Ensure backend is fully healthy before checking frontend
+
+---
+
 ## 🌐 API Endpoints
 
 ### Authentication
