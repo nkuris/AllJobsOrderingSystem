@@ -73,7 +73,7 @@ export default function RegisterPage() {
         </div>
         <div>
           <label>Phone</label>
-          <input value={phone} onChange={e => setPhone(e.target.value)} required />
+          <input value={phone} onChange={e => setPhone(e.target.value.replace(/\D/g, ''))} required />
         </div>
         <div>
           <label>Address</label>
