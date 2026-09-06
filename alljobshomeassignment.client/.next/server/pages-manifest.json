@@ -4,6 +4,13 @@
   "/_document": "pages/_document.js",
   "/_error": "pages/_error.js",
   "/login": "pages/login.html",
+  "/orders": "pages/orders.html",
+  "/orders/[id]": "pages/orders/[id].html",
+  "/orders/create": "pages/orders/create.html",
+  "/products": "pages/products.html",
+  "/products/[id]": "pages/products/[id].html",
+  "/products/[id]/edit": "pages/products/[id]/edit.html",
+  "/products/create": "pages/products/create.html",
   "/register": "pages/register.html",
   "/404": "pages/404.html"
 }

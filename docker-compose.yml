@@ -11,26 +11,41 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pChangeMe!"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
 
   backend:
     build:
       context: .
       dockerfile: AllJobsHomeAssignment.Server/Dockerfile
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    restart: on-failure
     environment:
       ConnectionStrings__DefaultConnection: "server=db;port=3306;database=AllJobsDb;user=root;password=ChangeMe!"
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:8080
     ports:
       - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 15s
 
   frontend:
     build:
       context: ./alljobshomeassignment.client
       dockerfile: Dockerfile
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     ports:
       - "3000:3000"
 

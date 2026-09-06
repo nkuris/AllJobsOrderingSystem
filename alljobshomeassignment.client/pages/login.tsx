@@ -31,6 +31,14 @@ export default function LoginPage() {
       // Check if error is 404 "Email not found" - redirect to register
       const status = err?.status
       const msg = err?.message
+      const code = err?.code
+
+      // Check for network/connection errors
+      if (!status && (code === 'ERR_NETWORK' || msg?.includes('Network') || msg?.includes('ECONNREFUSED'))) {
+        setError('Unable to connect to server. Please check your connection and try again.')
+        return
+      }
+
       if (status === 404 || msg === 'Email not found') {
         router.push(`/register?email=${encodeURIComponent(email)}`)
         return
