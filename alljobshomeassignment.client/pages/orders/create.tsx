@@ -79,7 +79,7 @@ export default function CreateOrderPage() {
               activeProducts.map(p => (
                 <div key={p.id} style={{display:'flex',alignItems:'center',gap:8,marginBottom:6}}>
                   <div style={{flex:1}}>{p.name} ({p.sku}) — {p.price.toFixed(2)} — stock: {p.stockQuantity}</div>
-                  <input type="number" min={0} max={p.stockQuantity} value={quantities[p.id] ?? 0} onChange={e => setQty(p.id, Number(e.target.value || 0))} style={{width:80}} />
+                  <input type="number" step="1" min={0} max={p.stockQuantity} value={quantities[p.id] ?? 0} onChange={e => setQty(p.id, Math.floor(Number(e.target.value || 0)))} style={{width:80}} />
                 </div>
               ))
             )}
